@@ -22,11 +22,14 @@ export default function Navbar({ currentPage, onNavigate, onReserve }: NavbarPro
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    setScrolled(window.scrollY > 20);
+    setScrolled(false);
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [currentPage]);
+
+  const isTransparent = currentPage === 'home' && !scrolled && !mobileOpen;
+  const isSolid = !isTransparent;
 
   const handleNavClick = (page: PageId) => {
     onNavigate(page);
@@ -36,7 +39,7 @@ export default function Navbar({ currentPage, onNavigate, onReserve }: NavbarPro
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-        scrolled || mobileOpen
+        isSolid
           ? 'bg-cream/95 shadow-md backdrop-blur-md'
           : 'bg-transparent'
       }`}
@@ -48,9 +51,9 @@ export default function Navbar({ currentPage, onNavigate, onReserve }: NavbarPro
           className="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-ember-500 rounded-lg"
           aria-label="Saffron & Ember home"
         >
-          <Flame className={`h-7 w-7 ${scrolled || mobileOpen ? 'text-ember-600' : 'text-ember-500'}`} />
+          <Flame className={`h-7 w-7 ${isSolid ? 'text-ember-600' : 'text-ember-500'}`} />
           <span className={`font-serif text-xl font-semibold tracking-wide ${
-            scrolled || mobileOpen ? 'text-charcoal-900' : 'text-white'
+            isSolid ? 'text-charcoal-900' : 'text-white'
           }`}>
             Saffron <span className="text-ember-500">&amp;</span> Ember
           </span>
@@ -63,9 +66,9 @@ export default function Navbar({ currentPage, onNavigate, onReserve }: NavbarPro
               <button
                 onClick={() => handleNavClick(link.id)}
                 className={`relative text-sm font-medium tracking-wide transition-colors duration-300 hover:text-ember-600 focus:outline-none focus:ring-2 focus:ring-ember-500 rounded px-1 ${
-                  scrolled || mobileOpen
+                  isSolid
                     ? currentPage === link.id ? 'text-ember-600' : 'text-charcoal-700'
-                    : currentPage === link.id ? 'text-saffron-300' : 'text-white/90'
+                    : currentPage === link.id ? 'text-saffron-300' : 'text-white'
                 }`}
               >
                 {link.label}
@@ -91,7 +94,7 @@ export default function Navbar({ currentPage, onNavigate, onReserve }: NavbarPro
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className={`rounded-lg p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-ember-500 md:hidden ${
-            scrolled || mobileOpen ? 'text-charcoal-800' : 'text-white'
+            isSolid ? 'text-charcoal-800' : 'text-white'
           }`}
           aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={mobileOpen}
