@@ -22,10 +22,11 @@ export default function Navbar({ currentPage, onNavigate, onReserve }: NavbarPro
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
+    setScrolled(window.scrollY > 20);
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [currentPage]);
 
   const handleNavClick = (page: PageId) => {
     onNavigate(page);
